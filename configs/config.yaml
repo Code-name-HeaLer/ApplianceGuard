@@ -1,0 +1,59 @@
+project:
+  name: "ApplianceGuard"
+  seed: 42
+  device: "cuda" # "cuda" or "cpu"
+
+data:
+  raw_path: "data/raw" # Put your NPZ files here
+  processed_path: "data/processed" # Where intermediate files go
+  signal_column_index: 2
+  window_size: 480
+  stride: 240
+  padding_value: 0.0
+  scale_data: true
+
+  # File definitions (Relative to the project root or raw_path)
+  # IMPORTANT: You will need to move your NPZ files to data/raw/
+  files:
+    healthy: "11_REFIT_B2_DW_healthy_activations.npz"
+    unhealthy:
+      high_energy: "11_REFIT_B2_DW_unhealthy_high_energy_activations.npz"
+      low_energy: "11_REFIT_B2_DW_unhealthy_low_extended_energy_activations.npz"
+      noisy: "11_REFIT_B2_DW_unhealthy_noisy_activations.npz"
+
+  split_counts:
+    train: 360
+    val: 40
+
+graph:
+  n_clusters: 9
+  feature_threshold: 10.0
+  max_k_to_test: 15
+  perform_k_analysis: false
+  visualize: true
+
+model:
+  input_dim: 1
+  d_model: 256
+  nhead: 8
+  num_encoder_layers: 2
+  num_decoder_layers: 2
+  dim_feedforward: 1024
+  gcn_out_dim: 64
+  dropout: 0.1
+  activation: "gelu"
+  use_deconvolution: false # As per your latest successful test
+
+training:
+  batch_size: 32
+  epochs: 50
+  learning_rate: 0.0001
+  patience: 20
+  grad_clip: 0.7
+  save_dir: "models/saved"
+
+inference:
+  threshold_method: "QUANTILE" # Options: QUANTILE, MAX_HEALTHY
+  quantile: 0.99
+  batch_size: 64
+  results_dir: "results"
