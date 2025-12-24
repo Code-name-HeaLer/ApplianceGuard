@@ -8,8 +8,8 @@ class GCNTransformerAutoencoder(nn.Module):
     GCN-Transformer Autoencoder for time-series reconstruction (Conditional AE).
     """
     def __init__(self,
-                 input_dim: int,          
-                 seq_len: int,            
+                 input_dim: int,
+                 seq_len: int,
                  n_clusters: int,         
                  d_model: int,            
                  nhead: int,              
